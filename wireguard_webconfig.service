@@ -1,0 +1,10 @@
+[Unit]
+Description=Wireguard Web Configuration
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+ExecStart=/usr/bin/python3 ####SCRIPT LOCATION#### /etc/wireguard/wg0.conf
+
+[Install]
+WantedBy=multi-user.target
