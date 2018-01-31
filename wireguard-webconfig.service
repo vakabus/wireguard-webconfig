@@ -4,7 +4,7 @@ Wants=network-online.target
 After=network.target network-online.target
 
 [Service]
-ExecStart=/usr/bin/python3 ####SCRIPT LOCATION#### /etc/wireguard/wg0.conf
+ExecStart=/usr/bin/wireguard-webconfig /etc/wireguard/wg0.conf
 
 [Install]
 WantedBy=multi-user.target

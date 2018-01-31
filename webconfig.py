@@ -23,12 +23,16 @@ def check_auth(user, passwd):
             for line in cf:
                 if "Password" in line:
                     password = line[line.rfind(' ')+1:-1]
+                    if password == 'UNSET':
+                        password = ''
                 if "Username" in line:
                     username = line[line.rfind(' ')+1:-1]
     if username == '' or password == '':
         print("Empty username and/or password!!! Access denied!!!")
         return False
     result = user == username and passwd == password
+
+    # Simple bruteforcing prevention
     if result is False:
         time.sleep(0.5)
     return result
@@ -119,10 +123,15 @@ def remove_peer():
             if not removing:
                 config += line
     
+    # normalize config file
+    config = config.replace('\n\n\n', '\n\n')
+    if config.endswith('\n\n'):
+        config = config[:-1]
+
     with open(config_file, 'w') as cf:
-        cf.write(config.replace('\n\n\n', '\n\n'))
+        cf.write(config)
 
     return redirect('/')
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=51821)
