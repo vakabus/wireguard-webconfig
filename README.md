@@ -19,3 +19,7 @@ systemctl start wireguard-webconfig
 
 # Web interface should be running at http://127.0.0.1:51821/
 ```
+
+## Source code
+
+Everything is contained in file `webconfig.py`. Anything else is technically unnecessary. The code is quite messy, but it works. I might clean it up some day.

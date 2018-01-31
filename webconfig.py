@@ -2,6 +2,8 @@ from flask import Flask, request, redirect, Response
 from functools import wraps
 import sys
 import time
+import os
+import socket
 
 app = Flask(__name__)
 if len(sys.argv) == 1:
@@ -58,10 +60,12 @@ def requires_auth(f):
 def root():
     config = ''
     peer_counter = 0
+    privatekey = ''
     with open(config_file, 'r') as cf:
         for line in cf:
             line = line[:-1]
             if line.startswith("PrivateKey"):
+                privatekey = line[line.rfind(' ')+1:-1]
                 config += 'PrivateKey = THIS_IS_SECRET_PLEASE_DONT_READ<br/>'
             elif line.startswith("[I"):
                 config += "<b>" + line + "</b><br/>"
@@ -80,10 +84,34 @@ def root():
         <input type='text' name='ips' placeholder='Allowed IPs' required='true' />
         <input type='submit' value="Add" />
     </form>
+    <hr/>
+    <h2>Client config:</h2>
+    <pre>
+    [Interface]
+    Address = CLIENT_ADDRESS
+    PrivateKey = PRIVATE_KEY
+
+    [Peer]
+    PublicKey = {}
+    AllowedIPs = 0.0.0.0/0
+    Endpoint = {}:51820
+    </pre>
     </body>
+    </html>
     '''
 
-    return page.format(config)
+    # Get public key
+    try:
+        pubkey = os.popen('sh -c "echo {} | wg pubkey"'.format(privatekey)).readlines()[0][:-1]
+    except:
+        pubkey = 'SERVER_PRIVATE_KEY_IS_INVALID'
+    # Get public IP
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip = s.getsockname()[0]
+    s.close()
+
+    return page.format(config, pubkey, ip)
 
 @app.route("/add_peer", methods=['GET', 'POST'])
 @requires_auth
