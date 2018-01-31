@@ -161,5 +161,9 @@ def remove_peer():
 
     return redirect('/')
 
-if __name__ == "__main__":
+
+def main():
     app.run(port=51821)
+
+if __name__ == "__main__":
+    main()

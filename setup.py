@@ -31,7 +31,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'wireguard-webconfig=webconfig',
+            'wireguard-webconfig=webconfig:main',
         ],
     },
 )
