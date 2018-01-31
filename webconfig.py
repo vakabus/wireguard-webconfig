@@ -65,7 +65,7 @@ def root():
         for line in cf:
             line = line[:-1]
             if line.startswith("PrivateKey"):
-                privatekey = line[line.rfind(' ')+1:-1]
+                privatekey = line[line.rfind(' ')+1:]
                 config += 'PrivateKey = THIS_IS_SECRET_PLEASE_DONT_READ<br/>'
             elif line.startswith("[I"):
                 config += "<b>" + line + "</b><br/>"
@@ -106,6 +106,8 @@ def root():
     except:
         pubkey = 'SERVER_PRIVATE_KEY_IS_INVALID'
     # Get public IP
+    print(privatekey)
+
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     ip = s.getsockname()[0]
