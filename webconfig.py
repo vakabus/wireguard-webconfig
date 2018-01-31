@@ -163,7 +163,11 @@ def remove_peer():
 
 
 def main():
-    app.run(port=51821)
+    with open(config_file, 'r') as f:
+        for line in f:
+            if line.startswith("Address = "):
+                address = line[line.rfind(' ')+1:line.rfind('/')]
+    app.run(port=51821, host=address)
 
 if __name__ == "__main__":
     main()
